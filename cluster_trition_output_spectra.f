@@ -923,8 +923,8 @@ c       ----------------------------------
        z2p=z2p+(t3p-t2p)*p2zp/e2p
         else
         endif   
-        w=2.*g*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
-     *    *exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
+        w=2.*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
+     *    *g*exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
      *    +(m2*p1zp-m1*p2zp)**2)/(m1+m2)**2*2./hbc2)
      *    *8.*exp(-(((m1*x1p+m2*x2p)/(m1+m2)-x3p)**2
      *    +((m1*y1p+m2*y2p)/(m1+m2)-y3p)**2
