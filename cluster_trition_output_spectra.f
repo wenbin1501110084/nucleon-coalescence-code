@@ -3,7 +3,8 @@ c       ---------------------------------------------------------------
 c       cluster production from coalaescenc of nucleons from Hydrodynamics+UrQMD
 C       when you use this code, please cite these papers:
 C         W. Zhao, L.Zhu, H.Zheng, C.M.Ko and H.Song, Phys. Rev. C 98, no. 5, 054905 (2018).
-C         W. Zhao, C.Shen, C.M.Ko, Q.Liu and H.Song,  Phys. Rev. C 102, no. 4, 044912 (2020).          
+C         W. Zhao, C.Shen, C.M.Ko, Q.Liu and H.Song,  Phys. Rev. C 102, no. 4, 044912 (2020). 
+C         W.~Zhao, K.~j.~Sun, C.~M.~Ko and X.~Luo,[arXiv:2105.14204 [nucl-th]].         
 c       version with pt spectra   
 c       ---------------------------------------------------------------
        implicit double precision (a-h,o-z)
