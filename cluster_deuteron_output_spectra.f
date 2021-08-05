@@ -221,7 +221,7 @@ c        npi=0
 c       print *, nid,px,py,pz,xm,x,y,z,t
         e=sqrt(px**2+py**2+pz**2+xm**2)
        yy=0.5*dlog((e+pz)/(e-pz))
-       if (abs(yy).le. 2.5) then
+       if (abs(yy).le. 3.0) then
 
 c       if (iabs(nid).eq. 211.or.iabs(nid).eq. 111) then
 c        npi=npi+1

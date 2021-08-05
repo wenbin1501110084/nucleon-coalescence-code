@@ -52,7 +52,7 @@ c       ---------------------------------------------------------------
        Common/const/hbc2,cut
 
        parameter (ndisk=1,nevent=60,nmix=20)
-!        open (unit=200,file="deuteron.txt",status="unknown")  
+        open (unit=200,file="deuteron.txt",status="unknown")  
 
 !        open (unit=300,file="triton_3040.txt",status="unknown")
         open (unit=400,file="triton_spectra.txt",status="unknown")
@@ -124,6 +124,19 @@ c       sigmahh2=hbc/sqrt(2.*mp*ml/(2.*mp+ml)*0.0137)
         sigmaht2=sigmat2
         sigmahh1=sigmah1
         sigmahh2=sigmah2
+
+!       print *, 'iprint='
+!       read *, iprint
+!       if (iprint.gt.0) print *, sigmar,sigmad, sigmat1,sigmat2,sigmah1,
+!     *                            sigmah2,sigmaht1,sigmaht2,sigmahh1,
+!     *                            sigmahh2
+!       if (iprint.gt.0) print *, sigmar,sigmad, sigmat1,sigmat2,sigmah1,
+!     *                            sigmah2,sigmaht1,sigmaht2,sigmahh1,
+!     *                            sigmahh2
+c       print *, 'nevent='
+c       read *, nevent
+c        print *, 'nmix='
+c        read *, nmix
 
 c       --------------------------------------------------------------------
 c       read in proton, neutron, antiproton, antineutron, lambda and
@@ -219,7 +232,7 @@ c        npi=0
 c       print *, nid,px,py,pz,xm,x,y,z,t
         e=sqrt(px**2+py**2+pz**2+xm**2)
        yy=0.5*dlog((e+pz)/(e-pz))
-       if (abs(yy).le. 1.5) then
+       if (abs(yy).le. 3.0) then
 
 c       if (iabs(nid).eq. 211.or.iabs(nid).eq. 111) then
 c        npi=npi+1
@@ -309,6 +322,15 @@ c       endif
        enddo                          ! end to circulate III
         enddo                          ! end to circulate IV
 
+c        if (iprint.gt. 0) then
+c       print *, 'event  ', 'number of particles',
+c     *           'neuteron ', 'proton  ', 
+c     *           'lambda ','antineuteron ', 
+c     *           'antiproton ', 'anrilambda ','  pion '
+c       print *, iaevt,nparticle,nn,np,nl,nnb,npb,nlb,npi
+c        else
+c       endif   
+ 
 c        npis=npis+npi
         nns=nns+nn
         nnbs=nnbs+nnb
@@ -316,6 +338,18 @@ c        npis=npis+npi
         npbs=npbs+npb
 c        nls=nls+nl
 c        nlbs=nlbs+nlb
+        
+c       call binpt(ndimp,npi,ppix,ppiy,ppiz,mpi,nbin,bin,ptbin,pipt,
+c     *             piv2)
+!       call binpt(ndim,nn,pnx,pny,pnz,mn,nbin,bin,ptbin,npt,nv2)
+!       call binpt(ndim,nnb,pnbx,pnby,pnbz,mnb,nbin,bin,ptbin,
+!     *             nbpt,nbv2)                         
+!       call binpt(ndim,np,ppx,ppy,ppz,mp,nbin,bin,ptbin,ppt,pv2)
+!       call binpt(ndim,npb,ppbx,ppby,ppbz,mpb,nbin,bin,ptbin,
+!     *             pbpt,pbv2)                         
+c       call binpt(ndim,nl,plx,ply,plz,ml,nbin,bin,ptbin,lpt,lv2)                         
+c       call binpt(ndim,nlb,plbx,plby,plbz,mlb,nbin,bin,ptbin,
+c     *             lbpt,lbv2)                         
 
 
 
@@ -359,6 +393,20 @@ c       -------------------------
      *                tn,xn,yn,zn,nn,pnx,pny,pnz,mn,tn,xn,yn,zn,
      *                np,ppx,ppy,ppz,mp,tp,xp,yp,zp,mt,trn,nbin,
      *                bin,ptbin,three_p,dndypos,1)           ! tpx,tpy,tpz 
+!        call cluster3(5,ndim,gh,sigmah1,sigmah2,np,ppx,ppy,ppz,mp,tp,xp,
+!     *                yp,zp,np,ppx,ppy,ppz,mp,tp,xp,yp,zp,nn,pnx,pny,
+!     *                pnz,mn,tn,xn,yn,zn,mh,hn,nbin,bin,ptbin,hpt
+!     *                )           ! hpx,hpy,hpz 
+
+
+!       do iee=1,iread                                       ! 
+!!        write (300,*) '#triton px py pz'              ! 
+!!        write (300,*) nparticle(iee),0,0                     ! 
+!        write (300,*) tpx(iee),tpy(iee),tpz(iee)                    ! 
+!       enddo                                    ! 
+!       
+!c        if (iprint.gt.0) then
+
 !c       -------------------------           
 !c       antitriton production
 !c       ------------------------
@@ -445,22 +493,160 @@ c          endif
        enddo                          ! end to circulate I
 
 !        write (20,*) '#------------pt spectra-------------------------'
-        write(400,*)"#pT, dN/dpTdy of triton,   anti-triton"
         do i=1,nbin-1
-        write(400,*)i*0.2-0.1,three_p(i)/(nevent*nmix*nmix*1.0*bin)
-     *              ,anti_three_p(i)/(nevent*nmix*nmix*1.0*bin)
+        write(400,*)anti_three_p(i)/(nevent*nmix*nmix*1.0*bin)
+     *              ,three_p(i)/(nevent*nmix*nmix*1.0*bin)
+!       fac=2.*3.1416*ptbin(i)*bin
+!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
+!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
+!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
+!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
         enddo
         
-        !        write (20,*) '#-----------dN/dy-------------------------'
-        write(401,*)"#y, dN/dy of triton,    anti-triton"
+!        write (20,*) '#------------pt spectra-------------------------'
         do ii=1,10
         write(401,*)(ii-1.0)*1.0-5.0+1.0
      *              ,dndypos(ii)/(nevent*nmix*nmix*1.0)
      *              ,dndyneg(ii)/(nevent*nmix*nmix*1.0)
+!       fac=2.*3.1416*ptbin(i)*bin
+!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
+!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
+!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
+!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
         enddo
         
         
 
+!       do i=1,nbin
+!       if (abs(pipt(i)).gt. 0.) then
+!       piv2(i)=piv2(i)/pipt(i)   
+!       else
+!       endif   
+!       if (abs(npt(i)).gt. 0.) then
+!       nv2(i)=nv2(i)/npt(i)   
+!       else
+!       endif   
+!       if (abs(nbpt(i)).gt. 0.) then
+!       nbv2(i)=nbv2(i)/nbpt(i)   
+!       else
+!       endif   
+!       if (abs(ppt(i)).gt. 0.) then
+!       pv2(i)=pv2(i)/ppt(i)   
+!       else
+!       endif   
+!       if (abs(pbpt(i)).gt. 0.) then
+!       pbv2(i)=pbv2(i)/pbpt(i)   
+!       else
+!       endif   
+!       if (abs(lpt(i)).gt. 0.) then
+!       lv2(i)=lv2(i)/lpt(i)   
+!       else
+!       endif   
+!       if (abs(lbpt(i)).gt. 0.) then
+!       lbv2(i)=lbv2(i)/lbpt(i)   
+!       else
+!       endif   
+!       if (abs(rpt(i)).gt. 0.) then
+!       rv2(i)=rv2(i)/rpt(i)   
+!       else
+!       endif                
+!       if (abs(dpt(i)).gt. 0.) then
+!       dv2(i)=dv2(i)/dpt(i)   
+!       else
+!       endif   
+!       if (abs(dbpt(i)).gt. 0.) then
+!       dbv2(i)=dbv2(i)/dbpt(i)   
+!       else
+!       endif   
+!       if (abs(tpt(i)).gt. 0.) then
+!       tv2(i)=tv2(i)/tpt(i)   
+!       else
+!       endif   
+!       if (abs(tbpt(i)).gt. 0.) then
+!       tbv2(i)=tbv2(i)/tbpt(i)   
+!       else
+!       endif   
+!       if (abs(hpt(i)).gt. 0.) then
+!       hv2(i)=hv2(i)/hpt(i)   
+!       else
+!       endif   
+!       if (abs(hbpt(i)).gt. 0.) then
+!       hbv2(i)=hbv2(i)/hbpt(i)   
+!       else
+!       endif   
+!       if (abs(htpt(i)).gt. 0.) then
+!       htv2(i)=htv2(i)/htpt(i)   
+!       else
+!       endif   
+!       if (abs(htbpt(i)).gt. 0.) then
+!       htbv2(i)=htbv2(i)/htbpt(i)   
+!       else
+!       endif   
+!       if (abs(hhpt(i)).gt. 0.) then
+!       hhv2(i)=hhv2(i)/hhpt(i)   
+!       else
+!       endif   
+!       if (abs(hhbpt(i)).gt. 0.) then
+!       hhbv2(i)=hhbv2(i)/hhbpt(i)   
+!       else
+!       endif   
+!        enddo
+
+!        nevent1=nevent*ndisk
+
+!        nn=nns/nevent1
+!        nnb=nnbs/nevent1
+!        np=nps/nevent1
+!        npb=npbs/nevent1
+!        nl=nls/nevent1
+!        nlb=nlbs/nevent1
+!        npi=npis/nevent1
+!        nr=rn/nevent1      
+!            
+!       write (20,*) '  pt    ',' neutron ',' aneutron ',' proton ',
+!     *               ' aproton ','  lambda  ','  alambda ',' pion ',
+!     *               ' rho '
+!        write (20,1) nevent1,nn,nnb,np,npb,nl,nlb,npi,nr
+!  1       format(9i8.2)
+!        write (20,*) '------------pt spectra-------------------------'
+!        Do i=1,nbin
+!       fac=2.*3.1416*ptbin(i)*bin
+!        write (20,2) ptbin(i),npt(i)/nevent1/fac,nbpt(i)/nevent1/fac,
+!     *      ppt(i)/nevent1/fac,pbpt(i)/nevent1/fac,lpt(i)/nevent1/fac,
+!     *      lbpt(i)/nevent1/fac,pipt(i)/nevent1/fac,rpt(i)/nevent1/fac
+!  2       format(1f6.2,8e12.2)
+!        enddo
+!        write (20,*) '------------elliptic flow--------------------'
+!        do i=1,nbin
+!        write (20,2) ptbin(i),nv2(i),nbv2(i),pv2(i),pbv2(i),lv2(i),
+!     *               lbv2(i),piv2(i),rv2(i)
+!        enddo
+
+!        nevent2=nevent1*nmix
+!        nevent3=nevent1*nmix**2
+
+!       write (20,*) '  pt    ','  deu  ','   adeu   ','   tri   ',
+!     *               '  atri  ','  hel  ','  ahel    ','   htri  ',
+!     *               '  ahtri ','  hhel ','  ahhel   ' 
+!        write (20,3) float(nevent1),dn/nevent2,dbn/nevent2,
+!     *               trn/nevent3,trbn/nevent3,hn/nevent3,
+!     *               hbn/nevent3,htn/nevent3,htbn/nevent3,
+!     *               hhn/nevent3,hhbn/nevent3
+!  3       format(f8.2,10e10.2)
+!        write (20,*) '------------pt spectra-------------------------'
+!        do i=1,nbin
+!       fac=2.*3.1416*ptbin(i)*bin
+!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
+!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
+!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
+!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
+!        enddo
+!        write (20,*) '------------elliptic flow--------------------'
+
+!        do i=1,nbin
+!        write (20,3) ptbin(i),dv2(i),dbv2(i),tv2(i),tbv2(i),hv2(i),
+!     *               hbv2(i),htv2(i),htbv2(i),hhv2(i),hhbv2(i)
+!        enddo
        end
 
        subroutine cluster2(icase,g,ndim,sigma,n1,p1x,p1y,p1z,m1,t1,x1,
@@ -496,12 +682,29 @@ c       ------------------------------------------
      *               y1(i),z1(i),e2,p2x(j),p2y(j),p2z(j),m2,t2(j),
      *               x2(j),y2(j),z2(j),w,px,py,pz)
 
+!        write (200,*) '#anti-deuteron px py pz'              ! 
+!        write (200,*) nparticle(iee),0,0                     ! 
+
+
+
+
        t=sqrt(px**2+py**2)             
        e=sqrt(t**2+pz**2+md**2)
        y=0.5*dlog((e+pz)/(e-pz)) 
        if (abs(y).le. 1.0) then
         write (200,3) px,py,pz,w                    ! 
   3       format(4e17.7E3)
+!       dn=dn+w
+!       if (t.le.ptbin(nbin)) then   
+!       do k=1,nbin
+!!       if (t.gt.(ptbin(k)-bin/2.).and.t.le.(ptbin(k)+bin/2.)) then  
+!!        pt(k)=pt(k)+w
+!!!        v2(k)=v2(k)+(px**2-py**2)/t**2*w        
+!!       else
+!!       endif   
+!       enddo
+!       else
+!        endif
        else
        endif                    ! end if II
        else
@@ -610,7 +813,10 @@ c       ------------------------------------------
        t=sqrt(px**2+py**2)             
        e=sqrt(t**2+pz**2+mt**2)
        y=0.5*dlog((e+pz)/(e-pz)) 
-       w=w*2.0 ! return back to the thermal limit for triton
+!       if (abs(y).le. 1.0) then
+!        write (400,3) px,py,pz,w,nnnn                    ! 
+!  3       format(4e17.7E3,I4)
+
        do mm=0,10
           yu=mm*1.0-5.0+0.5
           yd=mm*1.0-5.0-0.5
@@ -625,12 +831,28 @@ c       ------------------------------------------
        do m=1,nbin-1
        if (t.gt.(ptbin(m)).and.t.le.(ptbin(m+1))) then   !11
         pt(m)=pt(m)+w
+!!!        v2(m)=v2(m)+(px**2-py**2)/t**2*w        
        else                                                          !11
        endif                                                         !11
        enddo
 
 
 
+!        write (400,3) px,py,pz,w,nnnn                    ! 
+!  3       format(4e17.7E3,I4)
+
+!       tn=tn+w
+!       if (t.le.ptbin(nbin)) then   
+!!       do m=1,nbin
+!!       if (t.gt.(ptbin(m)-bin/2.).and.t.le.(ptbin(m)+bin/2.)) then   
+!!        pt(m)=pt(m)+w
+
+!!!        v2(m)=v2(m)+(px**2-py**2)/t**2*w        
+!!       else
+!!       endif   
+!!       enddo
+!        else
+!        endif
        else
        endif
        else
@@ -701,8 +923,8 @@ c       ----------------------------------
        z2p=z2p+(t3p-t2p)*p2zp/e2p
         else
         endif   
-        w=g*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
-     *    *exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
+        w=2.*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
+     *    *g*exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
      *    +(m2*p1zp-m1*p2zp)**2)/(m1+m2)**2*2./hbc2)
      *    *8.*exp(-(((m1*x1p+m2*x2p)/(m1+m2)-x3p)**2
      *    +((m1*y1p+m2*y2p)/(m1+m2)-y3p)**2
