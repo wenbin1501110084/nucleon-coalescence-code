@@ -30,12 +30,12 @@ c       ---------------------------------------------------------------
      *            xl(ndim),yl(ndim),zl(ndim),tl(ndim),
      *            plbx(ndim),plby(ndim),plbz(ndim),
      *            xlb(ndim),ylb(ndim),zlb(ndim),tlb(ndim),
-     *            dpx(ndimp),dpy(ndimp),dpz(ndimp),                 ! added 
-     *            dbpx(ndimp),dbpy(ndimp),dbpz(ndimp),              ! added 
-     *            tpx(ndimp),tpy(ndimp),tpz(ndimp),                 ! added 
-     *            tbpx(ndimp),tbpy(ndimp),tbpz(ndimp),              ! added 
-     *            hpx(ndimp),hpy(ndimp),hpz(ndimp),                 ! added 
-     *            hbpx(ndimp),hbpy(ndimp),hbpz(ndimp)               ! added 
+     *            dpx(ndimp),dpy(ndimp),dpz(ndimp), 
+     *            dbpx(ndimp),dbpy(ndimp),dbpz(ndimp),  
+     *            tpx(ndimp),tpy(ndimp),tpz(ndimp),     
+     *            tbpx(ndimp),tbpy(ndimp),tbpz(ndimp),
+     *            hpx(ndimp),hpy(ndimp),hpz(ndimp),
+     *            hbpx(ndimp),hbpy(ndimp),hbpz(ndimp)
      
         parameter (nbin=31)
        dimension ptbin(nbin),pipt(nbin),npt(nbin),nbpt(nbin),ppt(nbin),
@@ -50,21 +50,14 @@ c       ---------------------------------------------------------------
 
        
        Common/const/hbc2,cut
-
-       parameter (ndisk=1,nevent=60,nmix=20)
+       
+       !nevent is the number of event in one input file. nmix is the mixed number of event
+       parameter (ndisk=1,nevent=60,nmix=20) 
         open (unit=200,file="deuteron_spectra.txt",status="unknown")  
         open (unit=201,file="deuteron_dndy.txt",status="unknown")  
-!        open (unit=300,file="triton_3040.txt",status="unknown")
-!        open (unit=400,file="helium3.txt",status="unknown")
-
-!        open (unit=500,file="nparticle_3040.txt",status="unknown")
 
         call GETARG(1,NAME1)
         open (unit=100,file=NAME1,status="unknown")
-c        open (unit=32,file="ampt72.dat",status="unknown")
-c        open (unit=33,file="ampt73.dat",status="unknown")
-c        open (unit=34,file="ampt74.dat",status="unknown")
-c        open (unit=35,file="ampt75.dat",status="unknown")
 
        
         cut=10.
@@ -102,17 +95,7 @@ c        open (unit=35,file="ampt75.dat",status="unknown")
         ghhb=1./4.
        sigmar=1.
 
-c       sigmad=hbc/sqrt(mn*mp/(mn+mp)*0.00806)
-c              sigmat1=hbc/sqrt(mn/2.*0.0159)
-c       sigmat2=hbc/sqrt(2.*mn*mp/(2.*mn+mp)*0.0159)
-c        sigmah1=hbc/sqrt(mp/2.*0.0137)
-c        sigmah2=hbc/sqrt(2.*mp*mn/(2.*mp+mn)*0.0137)
-c       sigmaht1=hbc/sqrt(mn*mp/(mn+mp)*0.0159)
-c       sigmaht2=hbc/sqrt((mn+mp)*ml/(mn+mp+ml)*0.0159)
-c       sigmahh1=hbc/sqrt(mp/2.*0.0137)
-c       sigmahh2=hbc/sqrt(2.*mp*ml/(2.*mp+ml)*0.0137)
-
-        omegad=3./4./(mn*1.96**2)!2.1421 is the original deuteron size
+        omegad=3./4./(mn*1.96**2)
         sigmad=1./sqrt(mn*omegad)
         omegat=1./(mn*1.7591**2)
         sigmat1=1./sqrt(mn*omegat)
@@ -211,29 +194,15 @@ c        npi=0
         do i=1,nmix                               ! start to circulate III
         read (100,*) nparticle
        print *, nparticle
-!       write (500,*) nparticle
         do j=1,nparticle                          ! start to circulate IV
        read (100,*) nid,px,py,pz,xm,x,y,z,t
        if(nid.eq.0)then
           nparticle=nparticle+1
           continue
        endif
-c       print *, nid,px,py,pz,xm,x,y,z,t
         e=sqrt(px**2+py**2+pz**2+xm**2)
        yy=0.5*dlog((e+pz)/(e-pz))
        if (abs(yy).le. 3.0) then
-
-c       if (iabs(nid).eq. 211.or.iabs(nid).eq. 111) then
-c        npi=npi+1
-c       ppix(npi)=px
-c        ppiy(npi)=py
-c        ppiz(npi)=pz
-c        xpi(npi)=x
-c        ypi(npi)=y
-c        zpi(npi)=z
-c       tpi(npi)=t
-c        else
-c        endif   
 
        if (nid.eq. 2112) then 
        nn=nn+1
@@ -462,11 +431,6 @@ c          endif
      *               three_p(i)/(nevent*nmix*1.0*bin),
      *               anti_three_p(i)/(nevent*nmix*1.0*bin)
 
-!       fac=2.*3.1416*ptbin(i)*bin
-!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
-!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
-!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
-!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
         enddo
         write(201,*)"#y, dN/dy of deuteron,    anti-deuteron"
         do j=0,12

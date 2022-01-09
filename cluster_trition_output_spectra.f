@@ -51,20 +51,14 @@ c       ---------------------------------------------------------------
        
        Common/const/hbc2,cut
 
+       !nevent is the number of event in one input file. nmix is the mixed number of event
        parameter (ndisk=1,nevent=60,nmix=20)
-        open (unit=200,file="deuteron.txt",status="unknown")  
 
-!        open (unit=300,file="triton_3040.txt",status="unknown")
         open (unit=400,file="triton_spectra.txt",status="unknown")
         open (unit=401,file="triton_dndy.txt",status="unknown")
-!        open (unit=500,file="nparticle_3040.txt",status="unknown")
 
         call GETARG(1,NAME1)
         open (unit=100,file=NAME1,status="unknown")
-c        open (unit=32,file="ampt72.dat",status="unknown")
-c        open (unit=33,file="ampt73.dat",status="unknown")
-c        open (unit=34,file="ampt74.dat",status="unknown")
-c        open (unit=35,file="ampt75.dat",status="unknown")
 
        
         cut=10.
@@ -102,19 +96,9 @@ c        open (unit=35,file="ampt75.dat",status="unknown")
         ghhb=1./4.
        sigmar=1.
 
-c       sigmad=hbc/sqrt(mn*mp/(mn+mp)*0.00806)
-c              sigmat1=hbc/sqrt(mn/2.*0.0159)
-c       sigmat2=hbc/sqrt(2.*mn*mp/(2.*mn+mp)*0.0159)
-c        sigmah1=hbc/sqrt(mp/2.*0.0137)
-c        sigmah2=hbc/sqrt(2.*mp*mn/(2.*mp+mn)*0.0137)
-c       sigmaht1=hbc/sqrt(mn*mp/(mn+mp)*0.0159)
-c       sigmaht2=hbc/sqrt((mn+mp)*ml/(mn+mp+ml)*0.0159)
-c       sigmahh1=hbc/sqrt(mp/2.*0.0137)
-c       sigmahh2=hbc/sqrt(2.*mp*ml/(2.*mp+ml)*0.0137)
-
         omegad=3./4./(mn*2.1421**2)
         sigmad=1./sqrt(mn*omegad)
-        omegat=1./(mn*1.59**2)!charge size is 1.7591.
+        omegat=1./(mn*1.59**2)
         sigmat1=1./sqrt(mn*omegat)
         sigmat2=sigmat1
         omegah=1./(mn*1.9661**2)
@@ -124,19 +108,6 @@ c       sigmahh2=hbc/sqrt(2.*mp*ml/(2.*mp+ml)*0.0137)
         sigmaht2=sigmat2
         sigmahh1=sigmah1
         sigmahh2=sigmah2
-
-!       print *, 'iprint='
-!       read *, iprint
-!       if (iprint.gt.0) print *, sigmar,sigmad, sigmat1,sigmat2,sigmah1,
-!     *                            sigmah2,sigmaht1,sigmaht2,sigmahh1,
-!     *                            sigmahh2
-!       if (iprint.gt.0) print *, sigmar,sigmad, sigmat1,sigmat2,sigmah1,
-!     *                            sigmah2,sigmaht1,sigmaht2,sigmahh1,
-!     *                            sigmahh2
-c       print *, 'nevent='
-c       read *, nevent
-c        print *, 'nmix='
-c        read *, nmix
 
 c       --------------------------------------------------------------------
 c       read in proton, neutron, antiproton, antineutron, lambda and
@@ -682,12 +653,6 @@ c       ------------------------------------------
      *               y1(i),z1(i),e2,p2x(j),p2y(j),p2z(j),m2,t2(j),
      *               x2(j),y2(j),z2(j),w,px,py,pz)
 
-!        write (200,*) '#anti-deuteron px py pz'              ! 
-!        write (200,*) nparticle(iee),0,0                     ! 
-
-
-
-
        t=sqrt(px**2+py**2)             
        e=sqrt(t**2+pz**2+md**2)
        y=0.5*dlog((e+pz)/(e-pz)) 
@@ -923,7 +888,7 @@ c       ----------------------------------
        z2p=z2p+(t3p-t2p)*p2zp/e2p
         else
         endif   
-        w=2.*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
+       w=2.*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
      *    *g*exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
      *    +(m2*p1zp-m1*p2zp)**2)/(m1+m2)**2*2./hbc2)
      *    *8.*exp(-(((m1*x1p+m2*x2p)/(m1+m2)-x3p)**2
