@@ -10,9 +10,9 @@ and
 to output the pT-spectra and dN/dy of triton and deuteron. The format for the input nucleon is:
 
       number_of_nucleon
-      id, px, py, pz, xm, x, y, z, t
+      id, px, py, pz, mass, x, y, z, t
       
-If you have any questions about it, please let me know. My email is: 1501110084@pku.edu.cn
+If you have any questions about it, please send message to email 1501110084@pku.edu.cn
 Wenbin Zhao
  
 
