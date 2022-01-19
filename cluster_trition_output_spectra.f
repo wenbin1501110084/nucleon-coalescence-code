@@ -51,8 +51,14 @@ c       ---------------------------------------------------------------
        Common/const/hbc2,cut
 
        !nevent is the number of event in one input file. nmix is the mixed number of event
-       parameter (ndisk=1,nevent=60,nmix=20)
-
+       parameter (ndisk=1)
+        open (unit=88, file='input.txt', status='unknown')
+       !.....Read input parameters ....... 
+        READ(88,*) nevent
+        READ(88,*) nmix
+        READ(88,*) rd
+        READ(88,*) rt
+        
         open (unit=400,file="triton_spectra.txt",status="unknown")
         open (unit=401,file="triton_dndy.txt",status="unknown")
 
@@ -95,9 +101,9 @@ c       ---------------------------------------------------------------
         ghhb=1./4.
        sigmar=1.
 
-        omegad=3./4./(mn*2.1421**2)
+        omegad=3./4./(mn*rd**2)
         sigmad=1./sqrt(mn*omegad)
-        omegat=1./(mn*1.59**2)
+        omegat=1./(mn*rt**2)
         sigmat1=1./sqrt(mn*omegat)
         sigmat2=sigmat1
         omegah=1./(mn*1.9661**2)
@@ -196,25 +202,11 @@ c        npi=0
         do i=1,nmix                               ! start to circulate III
         read (100,*) nparticle
        print *, nparticle
-!       write (500,*) nparticle
         do j=1,nparticle                          ! start to circulate IV
        read (100,*) nid,px,py,pz,xm,x,y,z,t
-c       print *, nid,px,py,pz,xm,x,y,z,t
         e=sqrt(px**2+py**2+pz**2+xm**2)
        yy=0.5*dlog((e+pz)/(e-pz))
        if (abs(yy).le. 3.0) then
-
-c       if (iabs(nid).eq. 211.or.iabs(nid).eq. 111) then
-c        npi=npi+1
-c       ppix(npi)=px
-c        ppiy(npi)=py
-c        ppiz(npi)=pz
-c        xpi(npi)=x
-c        ypi(npi)=y
-c        zpi(npi)=z
-c       tpi(npi)=t
-c        else
-c        endif   
 
        if (nid.eq. 2112) then 
        nn=nn+1
@@ -292,37 +284,10 @@ c       endif
        enddo                          ! end to circulate III
         enddo                          ! end to circulate IV
 
-c        if (iprint.gt. 0) then
-c       print *, 'event  ', 'number of particles',
-c     *           'neuteron ', 'proton  ', 
-c     *           'lambda ','antineuteron ', 
-c     *           'antiproton ', 'anrilambda ','  pion '
-c       print *, iaevt,nparticle,nn,np,nl,nnb,npb,nlb,npi
-c        else
-c       endif   
- 
-c        npis=npis+npi
         nns=nns+nn
         nnbs=nnbs+nnb
         nps=nps+np
         npbs=npbs+npb
-c        nls=nls+nl
-c        nlbs=nlbs+nlb
-        
-c       call binpt(ndimp,npi,ppix,ppiy,ppiz,mpi,nbin,bin,ptbin,pipt,
-c     *             piv2)
-!       call binpt(ndim,nn,pnx,pny,pnz,mn,nbin,bin,ptbin,npt,nv2)
-!       call binpt(ndim,nnb,pnbx,pnby,pnbz,mnb,nbin,bin,ptbin,
-!     *             nbpt,nbv2)                         
-!       call binpt(ndim,np,ppx,ppy,ppz,mp,nbin,bin,ptbin,ppt,pv2)
-!       call binpt(ndim,npb,ppbx,ppby,ppbz,mpb,nbin,bin,ptbin,
-!     *             pbpt,pbv2)                         
-c       call binpt(ndim,nl,plx,ply,plz,ml,nbin,bin,ptbin,lpt,lv2)                         
-c       call binpt(ndim,nlb,plbx,plby,plbz,mlb,nbin,bin,ptbin,
-c     *             lbpt,lbv2)                         
-
-
-
 c       ------------------------
 c       rho meson production
 c       -----------------------
@@ -337,23 +302,12 @@ c       ------------------------
 !     *                ppx,ppy,ppz,mp,tp,xp,yp,zp,md,dn,nbin,bin,
 !     *                ptbin,dpt)          ! dpx,dpy,dpz 
 
-!       do iee=1,iread                                       ! 
-!!           write (200,*) '#deuteron px py pz'              ! 
-!!           write (200,*) nparticle(iee),0,0                     ! 
-!           write (200,*) dpx(iee),dpy(iee),dpz(iee)                    ! 
-!       enddo                                    ! 
-c       -------------------------       
 c       antideuteron production
 c       -------------------------
 !       call cluster2(-5,gdb,ndim,sigmad,nnb,pnbx,pnby,pnbz,mnb,tnb,
 !     *                xnb,ynb,znb,npb,ppbx,ppby,ppbz,mpb,tpb,xpb,ypb,
 !     *            zpb,mdb,dbn,nbin,bin,ptbin,dbpt)           ! dbpx,dbpy,dbpz 
 
-!       do iee=1,iread                                       ! 
-!!        write (200,*) '#anti-deuteron px py pz'              ! 
-!!        write (200,*) nparticle(iee),0,0                     ! 
-!        write (200,*) dbpx(iee),dbpy(iee),dbpz(iee)                    ! 
-!       enddo                                    ! 
 
 
 !c       -------------------------           
@@ -368,14 +322,6 @@ c       -------------------------
 !     *                pnz,mn,tn,xn,yn,zn,mh,hn,nbin,bin,ptbin,hpt
 !     *                )           ! hpx,hpy,hpz 
 
-
-!       do iee=1,iread                                       ! 
-!!        write (300,*) '#triton px py pz'              ! 
-!!        write (300,*) nparticle(iee),0,0                     ! 
-!        write (300,*) tpx(iee),tpy(iee),tpz(iee)                    ! 
-!       enddo                                    ! 
-!       
-!c        if (iprint.gt.0) then
 
 !c       -------------------------           
 !c       antitriton production
@@ -401,13 +347,6 @@ c       helium3 production
 !     *                yp,zp,np,ppx,ppy,ppz,mp,tp,xp,yp,zp,nn,pnx,pny,
 !     *                pnz,mn,tn,xn,yn,zn,mh,hn,nbin,bin,ptbin,hpt
 !     *                )           ! hpx,hpy,hpz 
-!!       do iee=1,iread                                       ! 
-!!!        write (400,*) '#helium3 px py pz'              ! 
-!!!        write (400,*) nparticle(iee),0,0                     ! 
-!!        write (400,*) hpx(iee),hpy(iee),hpz(iee)                       ! 
-!!       enddo                                    ! 
-
-
 !c       -----------------------------
 !c       antihelium3 production
 !c       -----------------------------
@@ -415,14 +354,6 @@ c       helium3 production
 !     *                tpb,xpb,ypb,zpb,npb,ppbx,ppby,ppbz,mpb,tpb,xpb,
 !     *                ypb,zpb,nnb,pnbx,pnby,pnbz,mnb,tnb,xnb,ynb,znb,
 !     *                mhb,hbn,nbin,bin,ptbin,hbpt)           ! hbpx,hbpy,hbpz 
-!!       do iee=1,iread                                       ! 
-!!!        write (400,*) '#anti-helium3 px py pz'              ! 
-!!!        write (400,*) nparticle(iee),0,0                     ! 
-!!        write (400,*) hbpx(iee),hbpy(iee),hbpz(iee)                       ! 
-!!       enddo                                    ! 
-
-
-
 
 c       -----------------------------
 c       hypertriton  production
@@ -466,11 +397,6 @@ c          endif
         do i=1,nbin-1
         write(400,*)anti_three_p(i)/(nevent*nmix*nmix*1.0*bin)
      *              ,three_p(i)/(nevent*nmix*nmix*1.0*bin)
-!       fac=2.*3.1416*ptbin(i)*bin
-!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
-!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
-!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
-!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
         enddo
         
 !        write (20,*) '#------------pt spectra-------------------------'
@@ -478,145 +404,10 @@ c          endif
         write(401,*)(ii-1.0)*1.0-5.0+1.0
      *              ,dndypos(ii)/(nevent*nmix*nmix*1.0)
      *              ,dndyneg(ii)/(nevent*nmix*nmix*1.0)
-!       fac=2.*3.1416*ptbin(i)*bin
-!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
-!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
-!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
-!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
         enddo
         
         
 
-!       do i=1,nbin
-!       if (abs(pipt(i)).gt. 0.) then
-!       piv2(i)=piv2(i)/pipt(i)   
-!       else
-!       endif   
-!       if (abs(npt(i)).gt. 0.) then
-!       nv2(i)=nv2(i)/npt(i)   
-!       else
-!       endif   
-!       if (abs(nbpt(i)).gt. 0.) then
-!       nbv2(i)=nbv2(i)/nbpt(i)   
-!       else
-!       endif   
-!       if (abs(ppt(i)).gt. 0.) then
-!       pv2(i)=pv2(i)/ppt(i)   
-!       else
-!       endif   
-!       if (abs(pbpt(i)).gt. 0.) then
-!       pbv2(i)=pbv2(i)/pbpt(i)   
-!       else
-!       endif   
-!       if (abs(lpt(i)).gt. 0.) then
-!       lv2(i)=lv2(i)/lpt(i)   
-!       else
-!       endif   
-!       if (abs(lbpt(i)).gt. 0.) then
-!       lbv2(i)=lbv2(i)/lbpt(i)   
-!       else
-!       endif   
-!       if (abs(rpt(i)).gt. 0.) then
-!       rv2(i)=rv2(i)/rpt(i)   
-!       else
-!       endif                
-!       if (abs(dpt(i)).gt. 0.) then
-!       dv2(i)=dv2(i)/dpt(i)   
-!       else
-!       endif   
-!       if (abs(dbpt(i)).gt. 0.) then
-!       dbv2(i)=dbv2(i)/dbpt(i)   
-!       else
-!       endif   
-!       if (abs(tpt(i)).gt. 0.) then
-!       tv2(i)=tv2(i)/tpt(i)   
-!       else
-!       endif   
-!       if (abs(tbpt(i)).gt. 0.) then
-!       tbv2(i)=tbv2(i)/tbpt(i)   
-!       else
-!       endif   
-!       if (abs(hpt(i)).gt. 0.) then
-!       hv2(i)=hv2(i)/hpt(i)   
-!       else
-!       endif   
-!       if (abs(hbpt(i)).gt. 0.) then
-!       hbv2(i)=hbv2(i)/hbpt(i)   
-!       else
-!       endif   
-!       if (abs(htpt(i)).gt. 0.) then
-!       htv2(i)=htv2(i)/htpt(i)   
-!       else
-!       endif   
-!       if (abs(htbpt(i)).gt. 0.) then
-!       htbv2(i)=htbv2(i)/htbpt(i)   
-!       else
-!       endif   
-!       if (abs(hhpt(i)).gt. 0.) then
-!       hhv2(i)=hhv2(i)/hhpt(i)   
-!       else
-!       endif   
-!       if (abs(hhbpt(i)).gt. 0.) then
-!       hhbv2(i)=hhbv2(i)/hhbpt(i)   
-!       else
-!       endif   
-!        enddo
-
-!        nevent1=nevent*ndisk
-
-!        nn=nns/nevent1
-!        nnb=nnbs/nevent1
-!        np=nps/nevent1
-!        npb=npbs/nevent1
-!        nl=nls/nevent1
-!        nlb=nlbs/nevent1
-!        npi=npis/nevent1
-!        nr=rn/nevent1      
-!            
-!       write (20,*) '  pt    ',' neutron ',' aneutron ',' proton ',
-!     *               ' aproton ','  lambda  ','  alambda ',' pion ',
-!     *               ' rho '
-!        write (20,1) nevent1,nn,nnb,np,npb,nl,nlb,npi,nr
-!  1       format(9i8.2)
-!        write (20,*) '------------pt spectra-------------------------'
-!        Do i=1,nbin
-!       fac=2.*3.1416*ptbin(i)*bin
-!        write (20,2) ptbin(i),npt(i)/nevent1/fac,nbpt(i)/nevent1/fac,
-!     *      ppt(i)/nevent1/fac,pbpt(i)/nevent1/fac,lpt(i)/nevent1/fac,
-!     *      lbpt(i)/nevent1/fac,pipt(i)/nevent1/fac,rpt(i)/nevent1/fac
-!  2       format(1f6.2,8e12.2)
-!        enddo
-!        write (20,*) '------------elliptic flow--------------------'
-!        do i=1,nbin
-!        write (20,2) ptbin(i),nv2(i),nbv2(i),pv2(i),pbv2(i),lv2(i),
-!     *               lbv2(i),piv2(i),rv2(i)
-!        enddo
-
-!        nevent2=nevent1*nmix
-!        nevent3=nevent1*nmix**2
-
-!       write (20,*) '  pt    ','  deu  ','   adeu   ','   tri   ',
-!     *               '  atri  ','  hel  ','  ahel    ','   htri  ',
-!     *               '  ahtri ','  hhel ','  ahhel   ' 
-!        write (20,3) float(nevent1),dn/nevent2,dbn/nevent2,
-!     *               trn/nevent3,trbn/nevent3,hn/nevent3,
-!     *               hbn/nevent3,htn/nevent3,htbn/nevent3,
-!     *               hhn/nevent3,hhbn/nevent3
-!  3       format(f8.2,10e10.2)
-!        write (20,*) '------------pt spectra-------------------------'
-!        do i=1,nbin
-!       fac=2.*3.1416*ptbin(i)*bin
-!        write (20,3) ptbin(i),dpt(i)/nevent2/fac,dbpt(i)/nevent2/fac,
-!     *     tpt(i)/nevent3/fac,tbpt(i)/nevent3/fac,hpt(i)/nevent3/fac,
-!     *    hbpt(i)/nevent3/fac,htpt(i)/nevent3/fac,htbpt(i)/nevent3/fac,
-!     *               hhpt(i)/nevent3/fac,hhbpt(i)/nevent3/fac
-!        enddo
-!        write (20,*) '------------elliptic flow--------------------'
-
-!        do i=1,nbin
-!        write (20,3) ptbin(i),dv2(i),dbv2(i),tv2(i),tbv2(i),hv2(i),
-!     *               hbv2(i),htv2(i),htbv2(i),hhv2(i),hhbv2(i)
-!        enddo
        end
 
        subroutine cluster2(icase,g,ndim,sigma,n1,p1x,p1y,p1z,m1,t1,x1,

@@ -1,0 +1,4 @@
+100      ! number of events
+10       ! number of mixed events
+1.96     ! sigma [fm] for deuteron recombination
+1.59     ! sigma [fm] for triton   recombination

@@ -50,8 +50,15 @@ c       ---------------------------------------------------------------
        
        Common/const/hbc2,cut
        
-       !nevent is the number of event in one input file. nmix is the mixed number of event
-       parameter (ndisk=1,nevent=60,nmix=20) 
+       !nevent is the number of event in one input file. 
+       parameter (ndisk=1) 
+        open (unit=88, file='input.txt', status='unknown')
+       !.....Read input parameters ....... 
+        READ(88,*) nevent
+        READ(88,*) nmix
+        READ(88,*) rd
+        READ(88,*) rt
+        
         open (unit=200,file="deuteron_spectra.txt",status="unknown")  
         open (unit=201,file="deuteron_dndy.txt",status="unknown")  
 
@@ -94,9 +101,9 @@ c       ---------------------------------------------------------------
         ghhb=1./4.
        sigmar=1.
 
-        omegad=3./4./(mn*1.96**2)
+        omegad=3./4./(mn*rd**2)
         sigmad=1./sqrt(mn*omegad)
-        omegat=1./(mn*1.7591**2)
+        omegat=1./(mn*rt**2)
         sigmat1=1./sqrt(mn*omegat)
         sigmat2=sigmat1
         omegah=1./(mn*1.9661**2)
@@ -299,11 +306,6 @@ c       ------------------------
      *                ppx,ppy,ppz,mp,tp,xp,yp,zp,md,dn,nbin,bin,
      *                ptbin,three_p,dndypos)          ! dpx,dpy,dpz added 
 
-!       do iee=1,iread                                       ! added 
-!!           write (200,*) '#deuteron px py pz'              ! added 
-!!           write (200,*) nparticle(iee),0,0                     ! added 
-!           write (200,*) dpx(iee),dpy(iee),dpz(iee)                    ! added 
-!       enddo                                    ! added 
 c       -------------------------       
 c       antideuteron production
 c       -------------------------
@@ -311,11 +313,6 @@ c       -------------------------
      *                xnb,ynb,znb,npb,ppbx,ppby,ppbz,mpb,tpb,xpb,ypb,
      *            zpb,mdb,dbn,nbin,bin,ptbin,anti_three_p,dndyneg)           ! dbpx,dbpy,dbpz added 
 
-!       do iee=1,iread                                       ! added 
-!!        write (200,*) '#anti-deuteron px py pz'              ! added 
-!!        write (200,*) nparticle(iee),0,0                     ! added 
-!        write (200,*) dbpx(iee),dbpy(iee),dbpz(iee)                    ! added 
-!       enddo                                    ! added 
 
 
 !c       -------------------------           
@@ -331,14 +328,6 @@ c       -------------------------
 !     *                )           ! hpx,hpy,hpz added 
 
 
-!       do iee=1,iread                                       ! added 
-!!        write (300,*) '#triton px py pz'              ! added 
-!!        write (300,*) nparticle(iee),0,0                     ! added 
-!        write (300,*) tpx(iee),tpy(iee),tpz(iee)                    ! added 
-!       enddo                                    ! added 
-!       
-!c        if (iprint.gt.0) then
-
 !c       -------------------------           
 !c       antitriton production
 !c       ------------------------
@@ -346,14 +335,6 @@ c       -------------------------
 !     *                pnbz,mnb,tnb,xnb,ynb,znb,nnb,pnbx,pnby,pnbz,mnb,
 !     *                tnb,xnb,ynb,znb,npb,ppbx,ppby,ppbz,mpb,tpb,xpb,
 !     *       ypb,zpb,mtb,trbn,nbin,bin,ptbin,anti_three_p,-1)           ! tbpx,tbpy,tbpz added 
-!       do iee=1,iread                                       ! added 
-!!        write (300,*) '#anti-triton px py pz'              ! added 
-!!        write (300,*) nparticle(iee),0,0                     ! added 
-!        write (300,*) tbpx(iee),tbpy(iee),tbpz(iee)                    ! added 
-!       enddo                                    ! added 
-
-
-
 
 c       -----------------------------
 c       helium3 production
@@ -362,12 +343,6 @@ c       helium3 production
 !     *                yp,zp,np,ppx,ppy,ppz,mp,tp,xp,yp,zp,nn,pnx,pny,
 !     *                pnz,mn,tn,xn,yn,zn,mh,hn,nbin,bin,ptbin,hpt
 !     *                )           ! hpx,hpy,hpz added 
-!!       do iee=1,iread                                       ! added 
-!!!        write (400,*) '#helium3 px py pz'              ! added 
-!!!        write (400,*) nparticle(iee),0,0                     ! added 
-!!        write (400,*) hpx(iee),hpy(iee),hpz(iee)                       ! added 
-!!       enddo                                    ! added 
-
 
 !c       -----------------------------
 !c       antihelium3 production
@@ -376,14 +351,6 @@ c       helium3 production
 !     *                tpb,xpb,ypb,zpb,npb,ppbx,ppby,ppbz,mpb,tpb,xpb,
 !     *                ypb,zpb,nnb,pnbx,pnby,pnbz,mnb,tnb,xnb,ynb,znb,
 !     *                mhb,hbn,nbin,bin,ptbin,hbpt)           ! hbpx,hbpy,hbpz added 
-!!       do iee=1,iread                                       ! added 
-!!!        write (400,*) '#anti-helium3 px py pz'              ! added 
-!!!        write (400,*) nparticle(iee),0,0                     ! added 
-!!        write (400,*) hbpx(iee),hbpy(iee),hbpz(iee)                       ! added 
-!!       enddo                                    ! added 
-
-
-
 
 c       -----------------------------
 c       hypertriton  production
