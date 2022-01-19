@@ -568,10 +568,7 @@ c       ------------------------------------------
        t=sqrt(px**2+py**2)             
        e=sqrt(t**2+pz**2+mt**2)
        y=0.5*dlog((e+pz)/(e-pz)) 
-!       if (abs(y).le. 1.0) then
-!        write (400,3) px,py,pz,w,nnnn                    ! 
-!  3       format(4e17.7E3,I4)
-
+       w = w * 2. ! return to the thermal limit for triton or helium3
        do mm=0,10
           yu=mm*1.0-5.0+0.5
           yd=mm*1.0-5.0-0.5
@@ -586,7 +583,6 @@ c       ------------------------------------------
        do m=1,nbin-1
        if (t.gt.(ptbin(m)).and.t.le.(ptbin(m+1))) then   !11
         pt(m)=pt(m)+w
-!!!        v2(m)=v2(m)+(px**2-py**2)/t**2*w        
        else                                                          !11
        endif                                                         !11
        enddo
@@ -596,18 +592,6 @@ c       ------------------------------------------
 !        write (400,3) px,py,pz,w,nnnn                    ! 
 !  3       format(4e17.7E3,I4)
 
-!       tn=tn+w
-!       if (t.le.ptbin(nbin)) then   
-!!       do m=1,nbin
-!!       if (t.gt.(ptbin(m)-bin/2.).and.t.le.(ptbin(m)+bin/2.)) then   
-!!        pt(m)=pt(m)+w
-
-!!!        v2(m)=v2(m)+(px**2-py**2)/t**2*w        
-!!       else
-!!       endif   
-!!       enddo
-!        else
-!        endif
        else
        endif
        else
@@ -678,7 +662,7 @@ c       ----------------------------------
        z2p=z2p+(t3p-t2p)*p2zp/e2p
         else
         endif   
-       w=2.*8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
+       w=8.*exp(-((x1p-x2p)**2+(y1p-y2p)**2+(z1p-z2p)**2)/2./sigma12)
      *    *g*exp(-sigma12*((m2*p1xp-m1*p2xp)**2+(m2*p1yp-m1*p2yp)**2
      *    +(m2*p1zp-m1*p2zp)**2)/(m1+m2)**2*2./hbc2)
      *    *8.*exp(-(((m1*x1p+m2*x2p)/(m1+m2)-x3p)**2
