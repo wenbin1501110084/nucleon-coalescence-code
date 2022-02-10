@@ -1,4 +1,5 @@
-This the nucleons coalaescenc code to generate the light nuclei, deuteron and triton, by the coalaescenc process. To compile code, please use the command:
+This the nucleons coalaescenc code to generate the light nuclei, deuteron and triton, by the coalaescenc process. 
+To compile code, please use the command:
 
       gfortran -o Triton cluster_trition_output_spectra.f 
       gfortran -o Deuteron cluster_deuteron_output_spectra.f 
