@@ -1,4 +1,5 @@
 This the nucleons coalaescenc code to generate the light nuclei, deuteron and triton, by the coalaescenc process. 
+
 To compile code, please use the command:
 
       gfortran -o Triton cluster_trition_output_spectra.f 
@@ -18,7 +19,9 @@ to output the pT-spectra and dN/dy of triton and deuteron. The format for the in
       id, px, py, pz, mass, x, y, z, t
 
 The input.txt is the parameter file. You can also get the (anti)hypertriton, (anti)helium3 in this nucleon coalaescence code.
+
 If you have any questions about it, please send message to email 1501110084@pku.edu.cn
+
 Wenbin Zhao
  
 
