@@ -45,7 +45,9 @@ c       ---------------------------------------------------------------
      *            hhpt(nbin),hhbpt(nbin),rv2(nbin),dv2(nbin),dbv2(nbin),
      *            tv2(nbin),tbv2(nbin),hv2(nbin),hbv2(nbin),htv2(nbin),
      *            htbv2(nbin),hhv2(nbin),hhbv2(nbin),dndyneg(15),
-     *            anti_three_p(nbin-1),three_p(nbin-1),dndypos(15)
+     *            anti_three_p(nbin-1),three_p(nbin-1),dndypos(15),
+     *            p_spectra(nbin-1),antip_spectra(nbin-1),dndyantip(15),
+     *            dndyp(15)
 
        
        Common/const/hbc2,cut
@@ -61,7 +63,10 @@ c       ---------------------------------------------------------------
         
         open (unit=200,file="deuteron_spectra.txt",status="unknown")  
         open (unit=201,file="deuteron_dndy.txt",status="unknown")  
-
+        
+        open (unit=300,file="proton_spectra.txt",status="unknown")  
+        open (unit=301,file="proton_dndy.txt",status="unknown") 
+        
         call GETARG(1,NAME1)
         open (unit=100,file=NAME1,status="unknown")
 
@@ -172,11 +177,15 @@ c       --------------------------------------------------------------------
        do i=1,nbin-1
          three_p(i)=0.0
          anti_three_p(i)=0.0
+         p_spectra(i)=0.0
+         antip_spectra(i)=0.0
        enddo
 
        do j =1,15
           dndypos(j)=0.0
           dndyneg(j)=0.0
+          dndyantip(j)=0.0
+          dndyp(j)=0.0
       enddo
 
         npis=0
@@ -198,10 +207,11 @@ c        npi=0
        nl=0
        nlb=0
         do i=1,nmix                               ! start to circulate III
-        read (100,*) nparticle
-       print *, nparticle
+        read (100,*) mid0,nparticle,mid1,mid2,mid3,
+     .               mid4,mid5,mid6,mid7,mid8
+       !print *, nparticle
         do j=1,nparticle                          ! start to circulate IV
-       read (100,*) nid,px,py,pz,xm,x,y,z,t
+       read (100,*) nid,mid,xm,px,py,pz,t,x,y,z
        if(nid.eq.0)then
           nparticle=nparticle+1
           continue
@@ -224,13 +234,17 @@ c        npi=0
 
        if (nid.eq. -2112) then
         nnb=nnb+1
-       pnbx(nnb)=px
-       pnby(nnb)=py
+        pnbx(nnb)=px
+        pnby(nnb)=py
         pnbz(nnb)=pz
         xnb(nnb)=x
         ynb(nnb)=y
         znb(nnb)=z
         tnb(nnb)=t
+        else
+        endif                    ! end if II
+       
+       
        else
        endif
 
@@ -243,6 +257,28 @@ c        npi=0
         yp(np)=y
         zp(np)=z
         tp(np)=t
+        ptpp=sqrt(px**2+py**2)             
+        epp=sqrt(ptpp**2+pz**2+md**2)
+        ypp=0.5*dlog((e+pz)/(e-pz))
+        do mm=0,13
+          yu=mm*1.0*0.6-3.60+0.3
+          yd=mm*0.6-3.60-0.3
+          if(ypp.gt.yd.and.y.le.yu)then
+             dndyp(mm+1)=dndyp(mm+1)+1.0/0.6
+          else
+          endif
+       enddo 
+       
+        if (abs(ypp).le. 0.50) then
+          do m=1,nbin-1
+          if (ptpp.gt.(ptbin(m)).and.ptpp.le.(ptbin(m+1))) then   !11
+           p_spectra(m)=p_spectra(m)+1.0
+          else                                                          !11
+          endif                                                         !11
+          enddo
+        else
+        endif                    ! end if II
+       
         else
        endif
 
@@ -254,7 +290,26 @@ c        npi=0
         xpb(npb)=x
         ypb(npb)=y
         zpb(npb)=z
-        tpb(npb)=t       
+        tpb(npb)=t     
+        ptpp=sqrt(px**2+py**2)             
+        epp=sqrt(ptpp**2+pz**2+md**2)
+        ypp=0.5*dlog((e+pz)/(e-pz))
+        do mm=0,13
+          yu=mm*1.0*0.6-3.60+0.3
+          yd=mm*0.6-3.60-0.3
+          if(ypp.gt.yd.and.y.le.yu)then
+             dndyantip(mm+1)=dndyantip(mm+1)+1.0/0.6
+          else
+          endif
+       enddo 
+        if (abs(ypp).le. 0.50) then
+          do m=1,nbin-1
+          if (ptpp.gt.(ptbin(m)).and.ptpp.le.(ptbin(m+1))) then   !11
+           antip_spectra(m)=antip_spectra(m)+1.0
+          else                                                          !11
+          endif                                                         !11
+          enddo
+            
        else
        endif
 
@@ -391,17 +446,19 @@ c          endif
        enddo                          ! end to circulate I
 
 !        write (20,*) '#------------pt spectra-------------------------'
-        write(200,*)"#pT, dN/dpTdy of deuteron,    anti-deuteron"
+        write(200,*)"#pT, dN/dpTdy of p, anti-p, deuteron,anti-deuteron"
         do i=1,nbin-1
-        write(200,*)i*0.2-0.1,
+        write(200,*)i*0.2-0.1, p_spectra(i)/nevent*1.0,
+     *               antip_spectra(i)/nevent*1.0,
      *               three_p(i)/(nevent*nmix*1.0*bin),
      *               anti_three_p(i)/(nevent*nmix*1.0*bin)
 
         enddo
-        write(201,*)"#y, dN/dy of deuteron,    anti-deuteron"
+        write(201,*)"#y, dN/dy of p, anti-p, deuteron,    anti-deuteron"
         do j=0,12
 
-           write(201,*)(j*1.0)*0.6-3.60,
+           write(201,*)(j*1.0)*0.6-3.60, dndyp(j+1)/(nevent*1.0),
+     *                 dndyantip(j+1)/(nevent*1.0), 
      *                 dndypos(j+1)/(nevent*nmix*1.0),
      *                 dndyneg(j+1)/(nevent*nmix*1.0)
         enddo
