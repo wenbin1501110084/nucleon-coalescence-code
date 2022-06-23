@@ -203,7 +203,7 @@ c        npi=0
         read (100,*) nparticle
        print *, nparticle
         do j=1,nparticle                          ! start to circulate IV
-       read (100,*) nid,px,py,pz,xm,x,y,z,t
+       read (100,*) nid,mid,xm,px,py,pz,t,x,y,z
         e=sqrt(px**2+py**2+pz**2+xm**2)
        yy=0.5*dlog((e+pz)/(e-pz))
        if (abs(yy).le. 3.0) then

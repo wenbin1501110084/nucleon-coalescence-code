@@ -63,10 +63,7 @@ c       ---------------------------------------------------------------
         
         open (unit=200,file="deuteron_spectra.txt",status="unknown")  
         open (unit=201,file="deuteron_dndy.txt",status="unknown")  
-        
-        open (unit=300,file="proton_spectra.txt",status="unknown")  
-        open (unit=301,file="proton_dndy.txt",status="unknown") 
-        
+
         call GETARG(1,NAME1)
         open (unit=100,file=NAME1,status="unknown")
 
@@ -207,8 +204,7 @@ c        npi=0
        nl=0
        nlb=0
         do i=1,nmix                               ! start to circulate III
-        read (100,*) mid0,nparticle,mid1,mid2,mid3,
-     .               mid4,mid5,mid6,mid7,mid8
+        read (100,*) nparticle
        !print *, nparticle
         do j=1,nparticle                          ! start to circulate IV
        read (100,*) nid,mid,xm,px,py,pz,t,x,y,z
@@ -262,8 +258,8 @@ c        npi=0
         ypp=0.5*dlog((e+pz)/(e-pz))
         do mm=0,13
           yu=mm*1.0*0.6-3.60+0.3
-          yd=mm*0.6-3.60-0.3
-          if(ypp.gt.yd.and.y.le.yu)then
+          yd=yu - 0.6
+          if(ypp.gt.yd.and.ypp.le.yu)then
              dndyp(mm+1)=dndyp(mm+1)+1.0/0.6
           else
           endif
@@ -296,8 +292,8 @@ c        npi=0
         ypp=0.5*dlog((e+pz)/(e-pz))
         do mm=0,13
           yu=mm*1.0*0.6-3.60+0.3
-          yd=mm*0.6-3.60-0.3
-          if(ypp.gt.yd.and.y.le.yu)then
+          yd=yu-0.6
+          if(ypp.gt.yd.and.ypp.le.yu)then
              dndyantip(mm+1)=dndyantip(mm+1)+1.0/0.6
           else
           endif
@@ -501,7 +497,7 @@ c       ------------------------------------------
        y=0.5*dlog((e+pz)/(e-pz))
        do mm=0,13
           yu=mm*1.0*0.6-3.60+0.3
-          yd=mm*0.6-3.60-0.3
+          yd=yu-0.6
           if(y.gt.yd.and.y.le.yu)then
              dndy(mm+1)=dndy(mm+1)+w/0.6
           else
