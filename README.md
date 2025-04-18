@@ -1,10 +1,10 @@
        when you use this code, please cite these papers:
 
-         W. Zhao, L.Zhu, H.Zheng, C.M.Ko and H.Song, Phys. Rev. C 98, no. 5, 054905 (2018).
+       W. Zhao, L.Zhu, H.Zheng, C.M.Ko and H.Song, Phys. Rev. C 98, no. 5, 054905 (2018).
 
-         W. Zhao, C.Shen, C.M.Ko, Q.Liu and H.Song,  Phys. Rev. C 102, no. 4, 044912 (2020).  
+       W. Zhao, C.Shen, C.M.Ko, Q.Liu and H.Song,  Phys. Rev. C 102, no. 4, 044912 (2020).  
 
-C        W.~Zhao, K.~j.~Sun, C.~M.~Ko and X.~Luo, Phys. Lett. B \textbf{820} (2021), 136571.    
+       W.~Zhao, K.~j.~Sun, C.~M.~Ko and X.~Luo, Phys. Lett. B \textbf{820} (2021), 136571.    
 
 This the nucleons coalescence code to generate the light nuclei, deuteron and triton, 
 by the coalescence process. 
