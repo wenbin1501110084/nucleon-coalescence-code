@@ -1,5 +1,5 @@
-This the nucleons coalaescenc code to generate the light nuclei, deuteron and triton, 
-by the coalaescenc process. 
+This the nucleons coalescence code to generate the light nuclei, deuteron and triton, 
+by the coalescence process. 
 
 To compile code, please use the command:
 
